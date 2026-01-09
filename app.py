@@ -1,8 +1,4 @@
 import streamlit as st
-from openai import OpenAI
-
-# Load API key from Streamlit secrets
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="MathMentor AI")
 
@@ -16,16 +12,26 @@ level = st.selectbox(
 
 question = st.text_area("Enter your math question or concept:")
 
+def fake_ai_answer(q, lvl):
+    return f"""
+### Explanation ({lvl} Level)
+
+**Question:** {q}
+
+This concept can be understood as follows:
+
+- We break the idea into simple steps
+- Provide definitions and intuition
+- Explain with an example
+
+📌 *This response is generated using a simulated AI pipeline for demonstration purposes.*
+"""
+
 if st.button("Ask MathMentor"):
     if question.strip() == "":
         st.warning("Please enter a question.")
     else:
         with st.spinner("Thinking..."):
-            response = client.responses.create(
-                model="gpt-4.1-mini",
-                input=f"You are a math tutor for {level} students. Explain clearly:\n{question}"
-            )
-
+            answer = fake_ai_answer(question, level)
             st.success("Answer:")
-            st.write(response.output_text)
-
+            st.markdown(answer)
