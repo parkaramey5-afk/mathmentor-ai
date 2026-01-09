@@ -1,6 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 
+# Load API key from Streamlit secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="MathMentor AI")
@@ -20,19 +21,11 @@ if st.button("Ask MathMentor"):
         st.warning("Please enter a question.")
     else:
         with st.spinner("Thinking..."):
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": f"You are a helpful math tutor explaining concepts at {level} level."
-                    },
-                    {
-                        "role": "user",
-                        "content": question
-                    }
-                ]
+            response = client.responses.create(
+                model="gpt-4.1-mini",
+                input=f"You are a math tutor for {level} students. Explain clearly:\n{question}"
             )
 
             st.success("Answer:")
-            st.write(response.choices[0].message.content)
+            st.write(response.output_text)
+
